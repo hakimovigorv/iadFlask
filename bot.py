@@ -14,26 +14,25 @@ bot = telebot.TeleBot("bot code here")
 lock = Lock()
 conn = psycopg2.connect(
     host="localhost",
-    database="iad2",
-    user="postgres",
-    password="123",
-    port="5432"
+    database="stock_predicting",
+    user="stock",
+    password="stock",
+    port="5433"
 )
 cursor = conn.cursor()
 
 
 def select_from_company():
-    return sqlio.read_sql_query('select id, ticker from company', conn)
+    return sqlio.read_sql_query('select id, ticker from companies', conn)
 
 
-def select_quote(company_id):
-    return sqlio.read_sql_query(f'select date, time, open from quote where company_id = {company_id} order by date, time limit 100', conn)
+def select_quote(company_id, date_time):
+    return sqlio.read_sql_query(f'select date_, time_, open_ from quotes where company_id = {company_id} and date_<\'{date_time}\'::date order by date_ desc, time_ desc limit 100;', conn)
 
 
 def select_news(company_id):
     return sqlio.read_sql_query(
-        f'select news.id, news.news_text, news.topic from news left join craudsource c on news.id = c.news_id where c.news_id IS NULL and news.company_id={company_id}',
-        conn
+        f'select news.id, news.content, news.title, news.date_time from news left join craudsource c on news.id = c.news_id where c.news_id IS NULL and news.company_id={company_id}', conn
     )
 
 def insert_craudsource(news_id, positive, negative, neutral):
@@ -73,24 +72,26 @@ def send_task(chat_id):
     with lock:
         companies = select_from_company()
         company_id = companies.loc[randrange(companies.shape[0]), 'id']
-        quotes = select_quote(company_id)
-        quotes.loc[:, 'date_time'] = pd.to_datetime(quotes['date'].astype(str) + ' ' + quotes['time'].astype(str))
-        print(quotes)
+
+        news = select_news(company_id)
+        news_id = news.loc[randrange(news.shape[0]), 'id']
+        news_item = news.loc[news['id'] == news_id]
+        news_date_time = news_item.iloc[0]['date_time']
+
+        quotes = select_quote(company_id, news_date_time)
+        quotes.loc[:, 'date_time'] = pd.to_datetime(quotes['date_'].astype(str) + ' ' + quotes['time_'].astype(str))
 
         fig = plt.figure()
-        plt.plot(quotes['date_time'], quotes['open'])
+        plt.plot(quotes['date_time'], quotes['open_'])
         plt.ylabel('price')
         plt.xticks(rotation=45)
         filename = f'plot{chat_id}.png'
         fig.savefig(filename)
         fig.clf()
 
-        news = select_news(company_id)
-        news_id = news.loc[randrange(news.shape[0]), 'id']
-        news_item = news.loc[news['id'] == news_id]
         photo = open(filename, "rb")
-        topic = news_item.iloc[0]['topic']
-        news_text = news_item.iloc[0]['news_text']
+        topic = news_item.iloc[0]['title']
+        news_text = news_item.iloc[0]['content']
         text = f"\t{topic}" \
                f"\n\t{news_text}"
 
@@ -111,4 +112,4 @@ while True:
     try:
         bot.polling(none_stop=True, interval=0, timeout=0)
     except:
-        time.sleep(0.01)
+        time.sleep(0.1)
