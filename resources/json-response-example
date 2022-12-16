@@ -1,0 +1,133 @@
+/api/company/YNDX
+
+{
+  "news": {
+    "data": [
+      {
+        "id": 1,
+        "index": 0,
+        "news_text": "test news text 1 \\n vsem privet",
+        "topic": "Best topic ever"
+      },
+      {
+        "id": 2,
+        "index": 1,
+        "news_text": "test news text 2 \\n vsem privet",
+        "topic": "Best topic ever"
+      }
+    ],
+    "schema": {
+      "fields": [
+        {
+          "name": "index",
+          "type": "integer"
+        },
+        {
+          "name": "id",
+          "type": "integer"
+        },
+        {
+          "name": "news_text",
+          "type": "string"
+        },
+        {
+          "name": "topic",
+          "type": "string"
+        }
+      ],
+      "pandas_version": "1.4.0",
+      "primaryKey": [
+        "index"
+      ]
+    }
+  },
+  "qoutes": {
+    "data": [
+      {
+        "date": "2017-03-11T00:00:00.000",
+        "index": 0,
+        "open": 1000.0,
+        "time": "13:00:00"
+      },
+      {
+        "date": "2017-03-12T00:00:00.000",
+        "index": 1,
+        "open": 1100.0,
+        "time": "13:10:00"
+      },
+      {
+        "date": "2017-03-13T00:00:00.000",
+        "index": 2,
+        "open": 1120.0,
+        "time": "13:20:00"
+      },
+      {
+        "date": "2017-03-14T00:00:00.000",
+        "index": 3,
+        "open": 1000.0,
+        "time": "13:00:00"
+      },
+      {
+        "date": "2017-03-14T00:00:00.000",
+        "index": 4,
+        "open": 1100.0,
+        "time": "13:10:00"
+      },
+      {
+        "date": "2017-03-14T00:00:00.000",
+        "index": 5,
+        "open": 1120.0,
+        "time": "13:20:00"
+      },
+      {
+        "date": "2017-03-14T00:00:00.000",
+        "index": 6,
+        "open": 1123.0,
+        "time": "13:30:00"
+      },
+      {
+        "date": "2017-03-14T00:00:00.000",
+        "index": 7,
+        "open": 1123.0,
+        "time": "13:30:00"
+      },
+      {
+        "date": "2017-03-14T00:00:00.000",
+        "index": 8,
+        "open": 1125.0,
+        "time": "13:40:00"
+      },
+      {
+        "date": "2017-03-15T00:00:00.000",
+        "index": 9,
+        "open": 1125.0,
+        "time": "13:40:00"
+      }
+    ],
+    "schema": {
+      "fields": [
+        {
+          "name": "index",
+          "type": "integer"
+        },
+        {
+          "name": "date",
+          "type": "string"
+        },
+        {
+          "name": "time",
+          "type": "string"
+        },
+        {
+          "name": "open",
+          "type": "number"
+        }
+      ],
+      "pandas_version": "1.4.0",
+      "primaryKey": [
+        "index"
+      ]
+    }
+  },
+  "suggest": "example"
+}
