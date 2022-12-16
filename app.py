@@ -2,7 +2,6 @@ from flask import Flask, jsonify, abort, make_response
 import json
 import psycopg2
 import pandas.io.sql as sqlio
-import unicodedata
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -48,14 +47,13 @@ def get_company(company_ticker):  # put application's code here
     parsed_news = json.loads(json_news)
     json.dumps(parsed_news, indent=4)
 
-
     json_qoutes = qoutes.to_json(orient="table")
     parsed_qoutes = json.loads(json_qoutes)
     json.dumps(parsed_qoutes, indent=4)
 
     suggest = "example"
 
-    return jsonify({'news': parsed_news, 'qoutes': parsed_qoutes, 'suggest': suggest})
+    return jsonify({'news': parsed_news['data'], 'quotes': parsed_qoutes['data'], 'suggest': suggest})
 
 
 @app.route('/api/companies', methods=['GET'])
@@ -64,7 +62,7 @@ def get_companies():
     json_tickers = tickers.to_json(orient="table")
     parsed_tickers = json.loads(json_tickers)
     json.dumps(parsed_tickers, indent=4)
-    return jsonify({'tickers': parsed_tickers})
+    return jsonify({'tickers': parsed_tickers['data']})
 
 
 @app.errorhandler(404)
